@@ -77,8 +77,7 @@
         // Agora você pode usar o valor de 'materia' conforme necessário
         //console.log(materia);
 
-
-            const url = `http://ec2-3-87-132-155.compute-1.amazonaws.com:8080/flashcard/${materia}`;
+            const url = `http://ec2-54-147-170-79.compute-1.amazonaws.com:8080/flashcard/${materia}`;
             // Faça uma solicitação AJAX para o servidor para obter o próximo flashcard
             fetch(url)
                 .then(response => response.json())
@@ -100,7 +99,7 @@
                 console.log(flashcardId)
                 if (flashcardId) {
                     // Faz uma solicitação ao servidor para apagar o flashcard atual
-                    fetch(`http://ec2-3-87-132-155.compute-1.amazonaws.com:8080/flashcard/${flashcardId}`, {
+                    fetch(`http://ec2-54-147-170-79.compute-1.amazonaws.com:8080/flashcard/${flashcardId}`, {
                         method: 'DELETE'
                     })
                     .then(() => {
