@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashCards</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">FlashCards</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Listar</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="criarflashcard.html">CriarFLahsCard</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      
+
+      <div class="card">
+        <div class="card-body">
+            
+            <form id="flashcardForm">
+                <h5>Pergunta:</h5>
+                <label for="pergunta" class="form-label">Escreva aqui uma pergunta</label>
+                <textarea class="form-control" id="pergunta" rows="3" required></textarea>
+
+                <h5>Resposta:</h5>
+                <label for="resposta" class="form-label" >Escreva aqui uma resposta</label>
+                <textarea class="form-control" id="resposta" rows="3" required></textarea>
+                
+                <hr>
+                <h5>Matéria: </h5>
+                <select class="form-select" aria-label="Selecione a matéria" id="materia" required>
+                    <option selected disabled>Selecione a matéria</option>
+                    <option value="fisica">Física</option>
+                    <option value="quimica">Química</option>
+                    <option value="matematica">Matemática</option>
+                    <option value="biologia">Biologia</option>
+                    <option value="geografia">Geografia</option>
+                    <option value="historia">História</option>
+                    <option value="portugues">Português</option>
+                    <option value="filoesocio">Filo/Socio</option>
+                  </select>
+                  <br>
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submeter</button>
+                </div>
+            </form>
+        </div>
+      </div>
+        <!-- Alerta de sucesso -->
+        <div id="successAlert" class="alert alert-success d-none" role="alert">
+            FlashCard criado com sucesso!
+        </div>
+
+        <!-- Alerta de erro -->
+        <div id="errorAlert" class="alert alert-danger d-none" role="alert">
+            Ocorreu um erro ao criar o FlashCard. Por favor, tente novamente.
+        </div>
+          
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      <script>
+          document.getElementById('flashcardForm').addEventListener('submit', function(event) {
+              event.preventDefault(); // Evita que o formulário seja submetido normalmente
+
+              // Obtém os valores dos campos do formulário
+              const pergunta = document.getElementById('pergunta').value;
+              const resposta = document.getElementById('resposta').value;
+              const materia = document.getElementById('materia').value;
+
+              // Cria um objeto com os dados do formulário
+              const formData = {
+                  pergunta: pergunta,
+                  resposta: resposta,
+                  materia: materia
+              };
+
+              // Envia os dados do formulário para o backend
+              fetch('http://ec2-3-87-132-155.compute-1.amazonaws.com:8080/flashcard', {
+                  method: 'POST', // Método HTTP
+                  headers: {
+                      'Content-Type': 'application/json' // Tipo de conteúdo do corpo da requisição
+                  },
+                  body: JSON.stringify(formData) // Converte o objeto em JSON
+              })
+              .then(response => {
+                  // Verifica se a requisição foi bem-sucedida
+                  if (response.ok) {
+                      console.log('Formulário enviado com sucesso!');
+                      document.getElementById('successAlert').classList.remove('d-none');
+
+                        // Limpa os campos do formulário
+                        document.getElementById('pergunta').value = '';
+                        document.getElementById('resposta').value = '';
+                        document.getElementById('materia').selectedIndex = 0
+
+
+                      setTimeout(function() {
+                        document.getElementById('successAlert').classList.add('d-none');
+                        location.reload();
+                    }, 3000);
+                      // Faça o que for necessário após a submissão bem-sucedida
+                  } else {
+                      console.error('Erro ao enviar formulário:', response.statusText);
+                      document.getElementById('errorAlert').classList.remove('d-none');
+                      // Lida com o erro de acordo com sua necessidade
+                  }
+              })
+              .catch(error => {
+                  console.error('Erro ao enviar formulário:', error);
+                  // Lida com o erro de acordo com sua necessidade
+              });
+          });
+      </script>
+    </body>
+</html>
